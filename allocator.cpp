@@ -88,7 +88,7 @@ void *mem_alloc(size_t size){
 
     for (int i = 0; i < lowMemory.size(); i++)
         if (lowMemory[i].size >= size) {
-            mem_allocByAddress(lowMemory[i].address, lowMemory[i].size);
+            mem_allocByAddress(lowMemory[i].address, size);
             void *addr = getAddressOfMemory(getIndexOfMemory(lowMemory[i].address) + size - 1);
             if ((lowMemory[i].size -= size) <= 0)
                 lowMemory.erase(lowMemory.begin() + i);
@@ -109,7 +109,7 @@ void *mem_alloc(size_t size){
 
         if (freeSize == pageSize) {
             lowPage newLowPage = {getAddressOfMemory(i - freeSize + 1), pageSize};
-            mem_allocByAddress(newLowPage.address, newLowPage.size);
+            mem_allocByAddress(newLowPage.address, size);
             void *addr = getAddressOfMemory(getIndexOfMemory(newLowPage.address) + size - 1);
             newLowPage.size -= size;
             newLowPage.address = addr;
