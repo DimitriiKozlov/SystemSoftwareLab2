@@ -7,6 +7,12 @@
 #include <iostream>
 
 
+struct lowPage {
+    void *address;
+    size_t size;
+};
+
+
 // Show memory status
 void mem_dump();
 
@@ -21,6 +27,9 @@ size_t getIndexOfMemory(void*);
 
 // Get address of memory
 void *getAddressOfMemory(size_t);
+
+// Take memory space in byte by address
+void mem_allocByAddress(void *, size_t);
 
 
 

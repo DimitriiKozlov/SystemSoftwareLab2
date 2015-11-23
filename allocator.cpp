@@ -20,6 +20,7 @@ const int totalMemory = totalPage * pageSize;
 vector<int> memory = vector<int>((unsigned long) totalMemory, 0);
 void *memAddress = &memory;
 
+vector<lowPage> lowMemory = vector<lowPage>(0);
 
 
 void mem_dump() {
@@ -69,9 +70,13 @@ void *getAddressOfMemory(size_t index) {
 }
 
 void *mem_alloc(size_t size){
+    size = (size % 4) ? size + 4 - size % 4 : size;
     if (size > pageSize / 2)
         return mem_allocByte((size % pageSize)? size + pageSize - size % pageSize : size);
 
+    for (int i = 0; i < lowMemory.size(); i++) {
+        if (lowMemory[i].size >= size)
 
+    }
 
 }
