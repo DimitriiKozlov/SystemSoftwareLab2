@@ -74,6 +74,7 @@ void mem_allocByAddress(void *addr, size_t size) {
     for (size_t j = 0; j < size - 1; j++)
         memory[i + j] = 1;
     memory[i + size - 1] = 5;
+    return;
 }
 
 
@@ -83,8 +84,14 @@ void *mem_alloc(size_t size){
         return mem_allocByte((size % pageSize)? size + pageSize - size % pageSize : size);
 
     for (int i = 0; i < lowMemory.size(); i++)
-        if (lowMemory[i].size >= size)
+        if (lowMemory[i].size >= size) {
             mem_allocByAddress(lowMemory[i].address, lowMemory[i].size);
-
+            void *addr = getAddressOfMemory(getIndexOfMemory(lowMemory[i].address) + size - 1);
+            if ((lowMemory[i].size -= size) <= 0)
+                lowMemory.erase(lowMemory.begin() + i);
+            else
+                lowMemory[i].address = addr;
+            return addr;
+        }
 
 }
