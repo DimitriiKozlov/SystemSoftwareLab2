@@ -46,8 +46,11 @@ void *mem_allocByte(size_t size) {
     while (i < totalMemory) {
         if (!memory[i])
             freeSize++;
-        else
+        else {
             freeSize = 0;
+            i += pageSize - i % pageSize;
+            continue;
+        }
 
         if (freeSize >= size) {
             size_t j;
@@ -94,4 +97,26 @@ void *mem_alloc(size_t size){
             return addr;
         }
 
+    size_t i = 0, freeSize = 0;
+    while (i < totalMemory) {
+        if (!memory[i])
+            freeSize++;
+        else {
+            freeSize = 0;
+            i += pageSize - i % pageSize;
+            continue;
+        }
+
+        if (freeSize == pageSize) {
+            lowPage newLowPage = {getAddressOfMemory(i - freeSize + 1), pageSize};
+            mem_allocByAddress(newLowPage.address, newLowPage.size);
+            void *addr = getAddressOfMemory(getIndexOfMemory(newLowPage.address) + size - 1);
+            newLowPage.size -= size;
+            newLowPage.address = addr;
+            lowMemory.push_back(newLowPage);
+            return addr;
+        }
+        i++;
+    }
+    return NULL;
 }
